@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] perms = {"android.permission. WRITE_EXTERNAL_STORAGE"};
 
-        int permsRequestCode = 200;
 
 
 
@@ -58,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                                      @Override
                                      public void onPageFinished(WebView view, String url)
                                      {
-                                         Log.e("result",url);
+                                         Log.e("result", url);
 
                                          if(url.contains("https://reporting-bichm05.taleo.net/analytics/saw.dll?Dashboard")) {
                                              myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                            //  myWebView.loadUrl("javascript:clickFunction(){var form = document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\"); form.onclick(); })() ");
                                         //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
 
-                                             myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink.').click();");
+                                             myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink').click();");
 
 
                                              // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
@@ -80,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
 
            //    myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-gotoSubView-quickAccessBlock\").onclick();");
+
+                                         }
+                                        else if(url.contains("https://stggrupobolivar.taleo.net/smartorg/iam/accessmanagement")) {
+                                             Log.e("result", "Me logeo");
+                                             myWebView.loadUrl("javascript:document.getElementById('dialogTemplate-dialogForm-content-login-name1').value='Admin';" +
+                                                     "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-password').value='Welcome1';" +
+                                                     "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-defaultCmd').click();");
+
 
                                          }
 //                                         myWebView.loadUrl("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
