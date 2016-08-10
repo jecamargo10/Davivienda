@@ -1,5 +1,6 @@
 package com.example.javie.davivienda;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+      final   ProgressDialog dialog = new ProgressDialog(MainActivity.this);
 
 
 
@@ -61,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
                                          if(url.contains("https://reporting-bichm05.taleo.net/analytics/saw.dll?Dashboard")) {
                                              myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
                                                      "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
-                                         }
+
+                                             if (dialog.isShowing()) {
+                                                 dialog.dismiss();
+                                             }
+                                          }
                                          else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf"))
                                          {
                                              Log.e("result","ENTRO BI");
@@ -94,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                                  }
 
         );
+        dialog.setMessage("Loading..Please wait.");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
         myWebView.loadUrl("http://stggrupobolivar.taleo.net");
     }
     class MyJavaScriptInterface
