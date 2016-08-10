@@ -1,40 +1,19 @@
 package com.example.javie.davivienda;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Xml;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.charts.BarChart;
-
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 
-public class Graficas extends AppCompatActivity {
+public class Pie extends AppCompatActivity {
 
 
 
@@ -70,9 +49,6 @@ public class Graficas extends AppCompatActivity {
 String id = "<tr>";
         id +=chochorramo;
         id += "<tr>";
-        ArrayList<String> labels = new ArrayList<String>();
-        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
-
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -80,41 +56,23 @@ String id = "<tr>";
 
             xpp.setInput( new StringReader ( id) );
             int eventType = xpp.getEventType();
-            String tag="";
-            boolean bonice =false;
-
             while (eventType != XmlPullParser.END_DOCUMENT) {
-               if(eventType == XmlPullParser.END_TAG)
-                {
-                    if(xpp.getName().equals("tr"))
-                    {
-                        bonice=true;
-                        Log.e("result","End tag "+xpp.getName());
+                if(eventType == XmlPullParser.START_DOCUMENT) {
+                    Log.e("result","Empiezo");
 
-                    }
+                } else if(eventType == XmlPullParser.END_DOCUMENT) {
+                    Log.e("result","Finalizo");
+                } else if(eventType == XmlPullParser.START_TAG) {
+                    Log.e("result",xpp.getName());
+
+                    System.out.println("Start tag "+xpp.getName());
+                } else if(eventType == XmlPullParser.END_TAG)
+                {
                     Log.e("result","End tag "+xpp.getName());
 
+                    System.out.println();
                 } else if(eventType == XmlPullParser.TEXT) {
-                    if(!bonice)
-                    {
-                        labels.add(xpp.getText());
-
-                    }
-                    else
-                    {
-                        Log.e("result","Text "+xpp.getText());
-                        if(xpp.getText().equals("")||xpp.getText().equals(" "))
-                        {
-
-
-                        }
-                        else
-                        {
-                        //   AÑADIR NUMEROS
-                        }
-                               // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
-
-                    }
+                    Log.e("result","Text "+xpp.getText());
                 }
                 eventType = xpp.next();
             }
@@ -126,12 +84,6 @@ String id = "<tr>";
 
         }
 
-        for(int i = 0; i<labels.size();i++ )
-        {
-
-            Log.e("result",labels.get(i));
-
-        }
 /**
 
         ArrayList<String> labels = new ArrayList<String>();

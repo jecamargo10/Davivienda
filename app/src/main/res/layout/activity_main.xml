@@ -10,8 +10,8 @@
     tools:context="com.example.javie.davivienda.MainActivity">
 
     <WebView
-        android:layout_width="1dp"
-        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/webView"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
