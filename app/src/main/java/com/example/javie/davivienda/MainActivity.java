@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +15,29 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
+
+
+
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String[] perms = {"android.permission. WRITE_EXTERNAL_STORAGE"};
+
+        int permsRequestCode = 200;
+
 
 
 
@@ -40,10 +58,35 @@ public class MainActivity extends AppCompatActivity {
                                      @Override
                                      public void onPageFinished(WebView view, String url)
                                      {
-                                         myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
-                                                 "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
+                                         Log.e("result",url);
+
+                                         if(url.contains("https://reporting-bichm05.taleo.net/analytics/saw.dll?Dashboard")) {
+                                             myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
+                                                     "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
+                                         }
+                                         else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf"))
+                                         {
+                                             Log.e("result","ENTRO BI");
+
+                                           //  myWebView.loadUrl("javascript:clickFunction(){var form = document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\"); form.onclick(); })() ");
+                                        //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
+
+                                             myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink.').click();");
+
+
+                                             // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
+
+                                             //myWebView.loadUrl("$(\"#menuTemplate-menuForm-gotoSubView-quickAccessBlock\").trigger(\"onclick\");");
+
+
+           //    myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-gotoSubView-quickAccessBlock\").onclick();");
+
+                                         }
+//                                         myWebView.loadUrl("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+
                                      }
                                  }
+
         );
         myWebView.loadUrl("http://stggrupobolivar.taleo.net");
     }
@@ -58,8 +101,22 @@ public class MainActivity extends AppCompatActivity {
 
         public void showHTML(String html)
         {
-            Log.e("result",html);
 
+            if(html.contains("686")&&html.contains("146")&&html.contains("540"))
+            {
+
+                Intent intent = new Intent(MainActivity.this,Graficas.class);
+                String substr = html.substring(html.indexOf("<td class=\"PTCHC0\""),html.indexOf("%<"));
+
+                intent.putExtra("HTM",substr);
+
+                startActivity(intent);
+
+                finish();
+
+               //
+
+            }
         }
     }
 }
@@ -90,5 +147,81 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.e("result",html);
         }
-    }**/
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     File data = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator);
+     File logFile = new File(data, "highscore.txt");
+     if (!logFile.exists())
+     {
+     Log.e("result","BUSCO");
+
+     try
+     {
+     logFile.createNewFile();
+     }
+     catch (IOException e)
+     {
+     // TODO Auto-generated catch block
+     e.printStackTrace();
+     }
+     }
+     try
+     {
+     Log.e("result","Escribo");
+
+     //BufferedWriter for performance, true to set append to file flag
+     BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+     Log.e("result","asd");
+
+     buf.append(html);
+     Log.e("result","xxx");
+
+     buf.newLine();
+     Log.e("result","zzz");
+
+     buf.close();
+     Log.e("result","YEAH BITCHES");
+
+     }
+     catch (IOException e)
+     {
+     Log.e("result",e.getLocalizedMessage());
+     Log.e("result",e.getMessage());
+
+
+     // TODO Auto-generated catch block
+     e.printStackTrace();
+     }
+
+     **/
 
