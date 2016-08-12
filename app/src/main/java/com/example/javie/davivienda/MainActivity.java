@@ -1,8 +1,10 @@
 package com.example.javie.davivienda;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -26,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    // Use a unique request code for each use case
+    private static final int REQUEST_CODE_EXAMPLE = 0x9345;
 
 
 
@@ -36,75 +39,117 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-      final   ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        // Create an Intent to start LoginActivity
+        final Intent intent = new Intent(this, LoginActivity.class);
+
+        // Start LoginActivity with the request code
+        startActivityForResult(intent, REQUEST_CODE_EXAMPLE);
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.wtf("texto","Llega a OnActivityResult");
+        // First we need to check if the requestCode matches the one we used.
+        if(requestCode == REQUEST_CODE_EXAMPLE) {
+            Log.wtf("texto","requestCode == REQUEST_CODE_EXAMPLE");
+            // The resultCode is set by the DetailActivity
+            // By convention RESULT_OK means that what ever
+            // Activity did was successful
+            if(resultCode == Activity.RESULT_OK) {
+                // Get the result from the returned Intent
+                //String username = data.getStringExtra(LoginActivity.USERNAME);
+                //String password = data.getStringExtra(LoginActivity.PASSWORD);
+                Log.wtf("texto","Activity.RESULT_OK");
 
 
 
+                all();
 
-        final    WebView myWebView = (WebView) findViewById(R.id.webView);
+
+            } else {
+                // Activity was not successful. No data to retrieve.
+                Log.wtf("texto","Activity.RESULT NOT OK");
+            }
+        }
+    }
+
+    private void all(){
+
+        SharedPreferences prefs = getSharedPreferences("papas",Context.MODE_PRIVATE);
+        final String username = prefs.getString(LoginActivity.USERNAME, "%");
+        final String password = prefs.getString(LoginActivity.PASSWORD, "%");
+        Log.wtf("texto","Username: " + username + " - Password: " + password);
+        if(!username.equals("%") && !password.equals("%")){
+            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+            final WebView myWebView = (WebView) findViewById(R.id.webView);
             WebSettings webSettings = myWebView.getSettings();
             webSettings.setJavaScriptEnabled(true);
 
             myWebView.setWebViewClient(new WebViewClient());
-        myWebView.getSettings().setBuiltInZoomControls(true);
-        myWebView.getSettings().setSupportZoom(true);
-        myWebView.setInitialScale(135);
-        myWebView.loadUrl("http://stggrupobolivar.taleo.net");
+            myWebView.getSettings().setBuiltInZoomControls(true);
+            myWebView.getSettings().setSupportZoom(true);
+            myWebView.setInitialScale(135);
+            myWebView.loadUrl("http://stggrupobolivar.taleo.net");
 
 
-        myWebView.addJavascriptInterface(new MyJavaScriptInterface(this), "HtmlViewer");
-        myWebView.setWebViewClient(new WebViewClient()
-                                 {
-                                     @Override
-                                     public void onPageFinished(WebView view, String url)
-                                     {
-                                         Log.e("result", url);
+            myWebView.addJavascriptInterface(new MyJavaScriptInterface(this), "HtmlViewer");
+            myWebView.setWebViewClient(new WebViewClient() {
+                                           @Override
+                                           public void onPageFinished(WebView view, String url) {
+                                               Log.e("result", url);
 
-                                         if(url.contains("https://reporting-bichm05.taleo.net/analytics/saw.dll?Dashboard")) {
-                                             myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
-                                                     "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
+                                               if (url.contains("https://reporting-bichm05.taleo.net/analytics/saw.dll?Dashboard")) {
+                                                   myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
+                                                           "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
 
-                                             if (dialog.isShowing()) {
-                                                 dialog.dismiss();
-                                             }
-                                          }
-                                         else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf"))
-                                         {
-                                             Log.e("result","ENTRO BI");
+                                                   if (dialog.isShowing()) {
+                                                       dialog.dismiss();
+                                                   }
+                                               } else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf")) {
+                                                   Log.e("result", "ENTRO BI");
 
-                                           //  myWebView.loadUrl("javascript:clickFunction(){var form = document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\"); form.onclick(); })() ");
-                                        //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
+                                                   //  myWebView.loadUrl("javascript:clickFunction(){var form = document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\"); form.onclick(); })() ");
+                                                   //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
 
-                                             myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink').click();");
+                                                   myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink').click();");
 
 
-                                             // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
+                                                   // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
 
-                                             //myWebView.loadUrl("$(\"#menuTemplate-menuForm-gotoSubView-quickAccessBlock\").trigger(\"onclick\");");
-
-
-           //    myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-gotoSubView-quickAccessBlock\").onclick();");
-
-                                         }
-                                        else if(url.contains("https://stggrupobolivar.taleo.net/smartorg/iam/accessmanagement")) {
-                                             Log.e("result", "Me logeo");
-                                             myWebView.loadUrl("javascript:document.getElementById('dialogTemplate-dialogForm-content-login-name1').value='Admin';" +
-                                                     "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-password').value='Welcome1';" +
-                                                     "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-defaultCmd').click();");
+                                                   //myWebView.loadUrl("$(\"#menuTemplate-menuForm-gotoSubView-quickAccessBlock\").trigger(\"onclick\");");
 
 
-                                         }
+                                                   //    myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-gotoSubView-quickAccessBlock\").onclick();");
+
+                                               } else if (url.contains("https://stggrupobolivar.taleo.net/smartorg/iam/accessmanagement")) {
+                                                   Log.e("result", "Me logeo");
+                                                   myWebView.loadUrl("javascript:document.getElementById('dialogTemplate-dialogForm-content-login-name1').value='"+username+"';" +
+                                                           "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-password').value='"+password+"';" +
+                                                           "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-defaultCmd').click();");
+
+
+                                               }
 //                                         myWebView.loadUrl("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 
-                                     }
-                                 }
+                                           }
+                                       }
 
-        );
-        dialog.setMessage("Loading..Please wait.");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-        myWebView.loadUrl("http://stggrupobolivar.taleo.net");
+            );
+            dialog.setMessage("Loading..Please wait.");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+            myWebView.loadUrl("http://stggrupobolivar.taleo.net");
+        }else{
+            Toast.makeText(getBaseContext(), "username or pasword couldn't be retrieved", Toast.LENGTH_LONG).show();
+        }
+
+
     }
+
     class MyJavaScriptInterface
     {
         private Context ctx;
