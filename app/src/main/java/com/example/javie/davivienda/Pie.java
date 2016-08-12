@@ -8,12 +8,16 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import com.github.mikephil.charting.data.BarEntry;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 
 public class Pie extends AppCompatActivity {
+
 
 
 
@@ -28,15 +32,6 @@ public class Pie extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.otro);
 
-        Button cupones = (Button) findViewById(R.id.verPie);
-        cupones.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-
-            }
-        });
 
 
 
@@ -46,9 +41,12 @@ public class Pie extends AppCompatActivity {
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
-String id = "<tr>";
+        String id = "<tr>";
         id +=chochorramo;
         id += "<tr>";
+        ArrayList<String> labels = new ArrayList<String>();
+        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -56,23 +54,51 @@ String id = "<tr>";
 
             xpp.setInput( new StringReader ( id) );
             int eventType = xpp.getEventType();
+            String tag="";
+            boolean bonice =false;
+
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if(eventType == XmlPullParser.START_DOCUMENT) {
-                    Log.e("result","Empiezo");
-
-                } else if(eventType == XmlPullParser.END_DOCUMENT) {
-                    Log.e("result","Finalizo");
-                } else if(eventType == XmlPullParser.START_TAG) {
-                    Log.e("result",xpp.getName());
-
-                    System.out.println("Start tag "+xpp.getName());
-                } else if(eventType == XmlPullParser.END_TAG)
+                if(eventType == XmlPullParser.END_TAG)
                 {
+                    if(xpp.getName().equals("tr"))
+                    {
+                        bonice=true;
+                        Log.e("result","End tag "+xpp.getName());
+
+                    }
                     Log.e("result","End tag "+xpp.getName());
 
-                    System.out.println();
                 } else if(eventType == XmlPullParser.TEXT) {
-                    Log.e("result","Text "+xpp.getText());
+                    if(!bonice)
+                    {
+                        labels.add(xpp.getText());
+
+                    }
+                    else
+                    {
+                        if(xpp.getText().equals("")||xpp.getText().equals(" ")||xpp.getText().equals("Davivienda"))
+                        {
+
+
+                        }
+                        else
+                        {
+                            Log.e("result","Text "+xpp.getText());
+
+                            try
+                            {
+
+                            }
+                            catch (Exception e)
+                            {
+
+
+                            }
+                            //   AÑADIR NUMEROS
+                        }
+                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
+
+                    }
                 }
                 eventType = xpp.next();
             }
@@ -83,6 +109,14 @@ String id = "<tr>";
             Log.e("result",e.getMessage());
 
         }
+
+        for(int i = 0; i<labels.size();i++ )
+        {
+
+            Log.e("result",labels.get(i));
+
+        }
+
 
 /**
 
@@ -115,8 +149,7 @@ String id = "<tr>";
    //    TextView papitas= (TextView) findViewById(R.id.textView);
      //   papitas.setText(id);
 
-        WebView myWebView = (WebView) findViewById(R.id.webView2);
-        myWebView.loadData(id, "text/html", "UTF-8");
+
     }
 
 }

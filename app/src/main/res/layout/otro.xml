@@ -4,16 +4,25 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <WebView
-        android:layout_width="322dp"
-        android:layout_height="104dp"
-        android:id="@+id/webView2"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ver Pie"
-        android:id="@+id/verPie"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Davivienda"
+        android:id="@+id/textView"
         android:layout_gravity="center_horizontal" />
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="5dp"
+        android:layout_weight="0.57" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reporte de Solicitudes de Personal "
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>
