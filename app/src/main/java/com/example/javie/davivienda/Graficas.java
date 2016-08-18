@@ -65,6 +65,8 @@ public class Graficas extends AppCompatActivity {
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
+        Log.e("result",chochorramo);
+
         String id = "<tr>";
         id += chochorramo;
         id += "<tr>";
@@ -100,7 +102,6 @@ public class Graficas extends AppCompatActivity {
                         Log.e("result","End tag "+xpp.getName());
 
                     }
-                    Log.e("result","End tag "+xpp.getName());
 
                 } else if(eventType == XmlPullParser.TEXT) {
                     if(!bonice )
@@ -125,6 +126,7 @@ public class Graficas extends AppCompatActivity {
                             posicion ++;
                             try
                             {
+                                Log.wtf("texto",xpp.getText() + posicion );
 
                                 if (posicion == 2) {
                                     double numero=   Double.parseDouble(xpp.getText());
@@ -157,6 +159,7 @@ public class Graficas extends AppCompatActivity {
             Log.e("result",e.getMessage());
 
         }
+
 
 
         PieDataSet dataSet = new PieDataSet(yVals1, "");

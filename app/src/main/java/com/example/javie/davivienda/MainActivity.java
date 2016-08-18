@@ -165,14 +165,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,Graficas.class);
             //Log.wtf("texto","html: "+html);
             Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): "+html.indexOf("<td class=\"PTCHC0"));
-            Log.wtf("texto", "indexOf(\"%<\"): "+html.indexOf("%<"));
-            String substr = html.substring(html.indexOf("<td class=\"PTCHC0"),html.indexOf("%<"));
-            Log.wtf("texto","substr: "+substr);
+            Log.wtf("texto", "indexOf(\"%<\"): "+html.indexOf("</a> </td> </tr>"));
+            Log.wtf("texto", "indexOf(\"%<\"): "+html.indexOf("TTHC PTLR OOLT"));
+
+           /* String substr = html.substring(html.indexOf("<td class=\"PTCHC0"),html.indexOf("%</td"));
             intent.putExtra("HTM",substr);
 
             startActivity(intent);
-
-            finish();
+*/
 
         }
     }
