@@ -161,22 +161,19 @@ public class MainActivity extends AppCompatActivity {
 
         public void showHTML(String html)
         {
+            Log.wtf("texto","Entro a showHTML");
+            Intent intent = new Intent(MainActivity.this,Graficas.class);
+            //Log.wtf("texto","html: "+html);
+            Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): "+html.indexOf("<td class=\"PTCHC0"));
+            Log.wtf("texto", "indexOf(\"%<\"): "+html.indexOf("%<"));
+            String substr = html.substring(html.indexOf("<td class=\"PTCHC0"),html.indexOf("%<"));
+            Log.wtf("texto","substr: "+substr);
+            intent.putExtra("HTM",substr);
 
-            if(html.contains("686")&&html.contains("146")&&html.contains("540"))
-            {
+            startActivity(intent);
 
-                Intent intent = new Intent(MainActivity.this,Graficas.class);
-                String substr = html.substring(html.indexOf("<td class=\"PTCHC0\""),html.indexOf("%<"));
+            finish();
 
-                intent.putExtra("HTM",substr);
-
-                startActivity(intent);
-
-                finish();
-
-               //
-
-            }
         }
     }
 }

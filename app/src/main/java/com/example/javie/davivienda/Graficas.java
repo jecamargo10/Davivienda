@@ -65,8 +65,8 @@ public class Graficas extends AppCompatActivity {
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
-String id = "<tr>";
-        id +=chochorramo;
+        String id = "<tr>";
+        id += chochorramo;
         id += "<tr>";
         ArrayList<String> labels = new ArrayList<String>();
 
@@ -90,7 +90,7 @@ String id = "<tr>";
             int eventType = xpp.getEventType();
             String tag="";
             boolean bonice =false;
-int posicion = 0;
+            int posicion = 0;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                if(eventType == XmlPullParser.END_TAG)
                 {
@@ -105,10 +105,7 @@ int posicion = 0;
                 } else if(eventType == XmlPullParser.TEXT) {
                     if(!bonice )
                     {
-                        if (xpp.getText().equals("Solicitudes cubiertas")) {
-                            labels.add(xpp.getText());
-                        }
-                        else if (xpp.getText().equals("Solicitudes por cubrir")) {
+                        if (xpp.getText().equals("Solicitudes cubiertas") || xpp.getText().equals("Solicitudes por cubrir")) {
                             labels.add(xpp.getText());
                         }
 
@@ -125,12 +122,12 @@ int posicion = 0;
                         else
                         {
                             Log.e("result","TextICO "+xpp.getText());
- posicion ++;
+                            posicion ++;
                             try
                             {
 
                                 if (posicion == 2) {
-                                 double numero=   Double.parseDouble(xpp.getText());
+                                    double numero=   Double.parseDouble(xpp.getText());
                                     yVals1.add(new PieEntry((int) numero, 0));
                                 }
                                 else if (posicion == 3)
@@ -142,8 +139,8 @@ int posicion = 0;
                             }
                             catch (Exception e)
                             {
-
-
+                                Log.wtf("texto", "Error de parsing");
+                                e.printStackTrace();
                             }
                         //   AÑADIR NUMEROS
                         }
