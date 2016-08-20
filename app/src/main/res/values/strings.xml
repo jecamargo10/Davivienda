@@ -13,4 +13,6 @@
     <string name="error_field_required">Campo requerido</string>
     <string name="permission_rationale">"Permisos de contactos requeridos para proveer sugerencias de emails."
     </string>
+    <string name="login_invalido">Datos ingresados inválidos, intente nuevamente</string>
+    <string name="ok">ok</string>
 </resources>
