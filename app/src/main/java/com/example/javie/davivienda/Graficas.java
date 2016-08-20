@@ -65,12 +65,11 @@ public class Graficas extends AppCompatActivity {
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
-
         String id = "<tr>";
         id += chochorramo;
-        id += "\"></td></tr>";
+        id += "<tr>";
         ArrayList<String> labels = new ArrayList<String>();
-        ArrayList<String> cositos =new ArrayList<String>();
+
         ArrayList<PieEntry> yVals1 = new ArrayList<PieEntry>();
 
         PieChart  mChart = (PieChart) findViewById(R.id.chart1);
@@ -92,117 +91,60 @@ public class Graficas extends AppCompatActivity {
             String tag="";
             boolean bonice =false;
             int posicion = 0;
-            String anadidura= "";
-            boolean contando = false;
-            boolean primeraVez = false;
-
             while (eventType != XmlPullParser.END_DOCUMENT) {
                if(eventType == XmlPullParser.END_TAG)
                 {
-                    Log.e("result","End tag "+xpp.getName());
-
                     if(xpp.getName().equals("tr"))
                     {
                         bonice=true;
-
-
-                    //    Log.e("result","End tag "+xpp.getName());
+                        Log.e("result","End tag "+xpp.getName());
 
                     }
+                    Log.e("result","End tag "+xpp.getName());
 
-                }
-
-               else if(eventType == XmlPullParser.START_TAG)
-               {
-
-                   Log.e("result","START TAG "+xpp.getName());
-                   if(!primeraVez && xpp.getName().equals("td")&& bonice)
-                   {
-
-                       primeraVez = true;
-                   }
-                   else if(xpp.getName().equals("td")&& bonice)
-                   {
-                       posicion ++;
-
-
-                   }
-
-
-
-
-
-               }
-
-                   else if(eventType == XmlPullParser.TEXT) {
-
-
+                } else if(eventType == XmlPullParser.TEXT) {
                     if(!bonice )
                     {
-
-                        if (!xpp.getText().equals("")) {
-                            if(!xpp.getText().equals(" "))
-                            {
-                                Log.e("result","FUERA TR "+xpp.getText());
-
-                                labels.add(xpp.getText());
-                        }}
+                        if (xpp.getText().equals("Solicitudes cubiertas") || xpp.getText().equals("Solicitudes por cubrir")) {
+                            labels.add(xpp.getText());
+                        }
 
                     }
                     else
                     {
-                        Log.wtf("TITULO",xpp.getText()  );
-                        Log.wtf("POSICION",posicion+""  );
+                        Log.e("result","TextOOOOOO "+xpp.getText());
 
-
-                        if(xpp.getText().equals("")||xpp.getText().equals(" "))
+                        if(xpp.getText().equals("")||xpp.getText().equals(" ")||xpp.getText().equals("Davivienda"))
                         {
-
 
 
                         }
                         else
                         {
-
+                            Log.e("result","TextICO "+xpp.getText());
+                            posicion ++;
                             try
                             {
 
-                                if (posicion==0)
-                                {
-                                    Log.wtf("POS0",xpp.getText()  );
-anadidura +=xpp.getText() + ";";
-                                }
-
-                                else  if (posicion == 1) {
-                                    Log.wtf("POS1",xpp.getText()  );
-                                    anadidura +=xpp.getText() + ";";
-
-
-                                    double numero=   Double.parseDouble(xpp.getText().replace(",","."));
+                                if (posicion == 2) {
+                                    double numero=   Double.parseDouble(xpp.getText());
                                     yVals1.add(new PieEntry((int) numero, 0));
                                 }
-                                else if (posicion == 2)
+                                else if (posicion == 3)
                                 {
-                                    Log.wtf("POS2",xpp.getText()  );
-                                    posicion = 0 ;
-                                    cositos.add(anadidura);
-
-
                                     Double.parseDouble(xpp.getText());
-                                    double numero=   Double.parseDouble(xpp.getText().replace(",","."));
+                                    double numero=   Double.parseDouble(xpp.getText());
                                     yVals1.add(new PieEntry((int) numero, 1));
                                 }
                             }
                             catch (Exception e)
                             {
-                                Log.wtf("texto", "Error de parsing" + e.getMessage());
+                                Log.wtf("texto", "Error de parsing");
                                 e.printStackTrace();
                             }
                         //   AÑADIR NUMEROS
-
                         }
-
-                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
+                               // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
 
                     }
                 }
@@ -215,10 +157,6 @@ anadidura +=xpp.getText() + ";";
             Log.e("result",e.getMessage());
 
         }
-
-        Log.wtf("ARREGLO", "Fabuloso" + cositos.size());
-
-
 
 
         PieDataSet dataSet = new PieDataSet(yVals1, "");

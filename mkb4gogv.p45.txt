@@ -1,0 +1,16 @@
+﻿Revert "Merge remote-tracking branch 'origin/master'"
+
+This reverts commit fd9a3857d57bb7efa26f9da95bce050619439f34, reversing
+changes made to 3b24c1a4247bb365497571916e2f7a9c3bd21b7e.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is ahead of 'origin/master' by 2 commits.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	modified:   app/src/main/java/com/example/javie/davivienda/Graficas.java
+#	modified:   app/src/main/java/com/example/javie/davivienda/MainActivity.java
+#
+
