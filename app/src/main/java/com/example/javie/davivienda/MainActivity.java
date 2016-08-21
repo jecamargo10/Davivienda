@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     // Use a unique request code for each use case
     private static final int REQUEST_CODE_EXAMPLE = 0x9345;
 
+    private ProgressDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Start LoginActivity with the request code
         startActivityForResult(intent, REQUEST_CODE_EXAMPLE);
-
-
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         final String password = prefs.getString(LoginActivity.PASSWORD, "%");
         Log.wtf("texto", "Username: " + username + " - Password: " + password);
         if (!username.equals("%") && !password.equals("%")) {
-            final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+            dialog = new ProgressDialog(MainActivity.this);
 
             final WebView myWebView = (WebView) findViewById(R.id.webView);
             WebSettings webSettings = myWebView.getSettings();
@@ -108,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
                                                    myWebView.loadUrl("javascript:window.HtmlViewer.showHTML" +
                                                            "('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
 
-                                                   if (dialog.isShowing()) {
-                                                       dialog.dismiss();
-                                                   }
+                                                   //if (dialog.isShowing()) {
+                                                   //    dialog.dismiss();
+                                                   //}
                                                } else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf")) {
                                                    Log.wtf("text", "ENTRO LOGIN");
 
@@ -133,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
                                                    Log.wtf("texto", "vecesLogin: "+vecesLogin);
 
                                                    if(vecesLogin == 0){
+                                                       myWebView.clearCache(true);
+                                                       myWebView.clearHistory();
+
+                                                       clearCookies(myWebView.getContext());
+
                                                        myWebView.loadUrl("javascript:document.getElementById('dialogTemplate-dialogForm-content-login-name1').value='" + username + "';" +
                                                                "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-password').value='" + password + "';" +
                                                                "javascript:document.getElementById('dialogTemplate-dialogForm-content-login-defaultCmd').click();");
@@ -148,6 +155,26 @@ public class MainActivity extends AppCompatActivity {
                                                }
                                                //                                         myWebView.loadUrl("javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
 
+                                           }
+
+                                           private void clearCookies(Context context) {
+                                               Log.wtf("text", "Entró a clearCookies");
+                                               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                                   Log.d("texto", "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+                                                   CookieManager.getInstance().removeAllCookies(null);
+                                                   CookieManager.getInstance().flush();
+                                               } else
+                                               {
+                                                   Log.d("texto", "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+                                                   CookieSyncManager cookieSyncMngr=CookieSyncManager.createInstance(context);
+                                                   cookieSyncMngr.startSync();
+                                                   CookieManager cookieManager=CookieManager.getInstance();
+                                                   cookieManager.removeAllCookie();
+                                                   cookieManager.removeSessionCookie();
+                                                   cookieSyncMngr.stopSync();
+                                                   cookieSyncMngr.sync();
+                                               }
+                                               Log.wtf("text", "terminó clearCookies");
                                            }
                                        }
 
@@ -181,6 +208,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("HTM",substr);
 
             startActivity(intent);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
 
             finish();
 
