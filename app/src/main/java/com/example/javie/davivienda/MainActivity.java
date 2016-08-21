@@ -112,12 +112,13 @@ public class MainActivity extends AppCompatActivity {
                                                        dialog.dismiss();
                                                    }
                                                } else if (url.contains("stggrupobolivar.taleo.net/smartorg/smartorg/common/toc.jsf")) {
-                                                   Log.wtf("text", "ENTRO BI");
+                                                   Log.wtf("text", "ENTRO LOGIN");
 
                                                    //  myWebView.loadUrl("javascript:clickFunction(){var form = document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\"); form.onclick(); })() ");
                                                    //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
 
-                                                   myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink').click();");
+                                                   myWebView.loadUrl("javascript:document.querySelectorAll('[title=\"Access Oracle Business Intelligence\"]')[0].click();");
+                                                   //myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1466337356_29pc12-1-ribbonItemLink').click();");
 
 
                                                    // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
