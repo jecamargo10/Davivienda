@@ -174,11 +174,10 @@ public class MainActivity extends AppCompatActivity {
             Log.wtf("texto", "Entro a showHTML");
             Intent intent = new Intent(MainActivity.this, Graficas.class);
             //Log.wtf("texto","html: "+html);
-            Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): " + html.indexOf("<td class=\"PTCHC0"));
-            Log.wtf("texto", "indexOf(\"%<\"): " + html.indexOf("%<"));
-            String substr = html.substring(html.indexOf("<td class=\"PTCHC0"), html.indexOf("%<"));
-            Log.wtf("texto", "substr: " + substr);
-            intent.putExtra("HTM", substr);
+            Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): "+html.indexOf("<td class=\"PTCHC0"));
+            Log.wtf("texto", "indexOf(TTHC PTLR OOLT): "+html.indexOf("TTHC PTLR OOLT"));
+            String substr = html.substring(html.indexOf("<td class=\"PTCHC0"),html.indexOf("TTHC PTLR OOLT"));
+            intent.putExtra("HTM",substr);
 
             startActivity(intent);
 

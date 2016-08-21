@@ -65,11 +65,12 @@ public class Graficas extends AppCompatActivity {
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
+
         String id = "<tr>";
         id += chochorramo;
-        id += "<tr>";
+        id += "\"></td></tr>";
         ArrayList<String> labels = new ArrayList<String>();
-
+        ArrayList<String> cositos =new ArrayList<String>();
         ArrayList<PieEntry> yVals1 = new ArrayList<PieEntry>();
 
         PieChart  mChart = (PieChart) findViewById(R.id.chart1);
@@ -91,60 +92,117 @@ public class Graficas extends AppCompatActivity {
             String tag="";
             boolean bonice =false;
             int posicion = 0;
+            String anadidura= "";
+            boolean contando = false;
+            boolean primeraVez = false;
+
             while (eventType != XmlPullParser.END_DOCUMENT) {
-               if(eventType == XmlPullParser.END_TAG)
+                if(eventType == XmlPullParser.END_TAG)
                 {
+                    Log.e("result","End tag "+xpp.getName());
+
                     if(xpp.getName().equals("tr"))
                     {
                         bonice=true;
-                        Log.e("result","End tag "+xpp.getName());
+
+
+                        //    Log.e("result","End tag "+xpp.getName());
 
                     }
-                    Log.e("result","End tag "+xpp.getName());
 
-                } else if(eventType == XmlPullParser.TEXT) {
+                }
+
+                else if(eventType == XmlPullParser.START_TAG)
+                {
+
+                    Log.e("result","START TAG "+xpp.getName());
+                    if(!primeraVez && xpp.getName().equals("td")&& bonice)
+                    {
+
+                        primeraVez = true;
+                    }
+                    else if(xpp.getName().equals("td")&& bonice)
+                    {
+                        posicion ++;
+
+
+                    }
+
+
+
+
+
+                }
+
+                else if(eventType == XmlPullParser.TEXT) {
+
+
                     if(!bonice )
                     {
-                        if (xpp.getText().equals("Solicitudes cubiertas") || xpp.getText().equals("Solicitudes por cubrir")) {
-                            labels.add(xpp.getText());
-                        }
+
+                        if (!xpp.getText().equals("")) {
+                            if(!xpp.getText().equals(" "))
+                            {
+                                Log.e("result","FUERA TR "+xpp.getText());
+
+                                labels.add(xpp.getText());
+                            }}
 
                     }
                     else
                     {
-                        Log.e("result","TextOOOOOO "+xpp.getText());
+                        Log.wtf("TITULO",xpp.getText()  );
+                        Log.wtf("POSICION",posicion+""  );
 
-                        if(xpp.getText().equals("")||xpp.getText().equals(" ")||xpp.getText().equals("Davivienda"))
+
+                        if(xpp.getText().equals("")||xpp.getText().equals(" "))
                         {
+
 
 
                         }
                         else
                         {
-                            Log.e("result","TextICO "+xpp.getText());
-                            posicion ++;
+
                             try
                             {
 
-                                if (posicion == 2) {
-                                    double numero=   Double.parseDouble(xpp.getText());
+                                if (posicion==0)
+                                {
+                                    Log.wtf("POS0",xpp.getText()  );
+                                    anadidura +=xpp.getText() + ";";
+                                }
+
+                                else  if (posicion == 1) {
+                                    Log.wtf("POS1",xpp.getText()  );
+                                    anadidura +=xpp.getText() + ";";
+
+
+                                    double numero=   Double.parseDouble(xpp.getText().replace(",","."));
                                     yVals1.add(new PieEntry((int) numero, 0));
                                 }
-                                else if (posicion == 3)
+                                else if (posicion == 2)
                                 {
+                                    Log.wtf("POS2",xpp.getText()  );
+                                    posicion = 0 ;
+                                    cositos.add(anadidura);
+
+
                                     Double.parseDouble(xpp.getText());
-                                    double numero=   Double.parseDouble(xpp.getText());
+                                    double numero=   Double.parseDouble(xpp.getText().replace(",","."));
                                     yVals1.add(new PieEntry((int) numero, 1));
                                 }
                             }
                             catch (Exception e)
                             {
-                                Log.wtf("texto", "Error de parsing");
+                                Log.wtf("texto", "Error de parsing" + e.getMessage());
                                 e.printStackTrace();
                             }
-                        //   AÑADIR NUMEROS
+                            //   AÑADIR NUMEROS
+
                         }
-                               // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
+
+                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
 
                     }
                 }
@@ -157,6 +215,10 @@ public class Graficas extends AppCompatActivity {
             Log.e("result",e.getMessage());
 
         }
+
+        Log.wtf("ARREGLO", "Fabuloso" + cositos.size());
+
+
 
 
         PieDataSet dataSet = new PieDataSet(yVals1, "");
@@ -205,90 +267,90 @@ public class Graficas extends AppCompatActivity {
 
 /**
 
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+ ArrayList<Entry> yVals1 = new ArrayList<Entry>();
 
-        for (int i = 0; i < yValues.length; i++)
-            yVals1.add(new Entry(yValues[i], i));
-
-
+ for (int i = 0; i < yValues.length; i++)
+ yVals1.add(new Entry(yValues[i], i));
 
 
-        // create pieDataSet
-        PieDataSet dataSet = new PieDataSet(yVals1, "");
-        dataSet.setSliceSpace(3);
-        dataSet.setSelectionShift(5);
-
-        // adding colors
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        // Added My Own colors
-        for (int c : MY_COLORS)
-            colors.add(c);
 
 
-        dataSet.setColors(colors);
+ // create pieDataSet
+ PieDataSet dataSet = new PieDataSet(yVals1, "");
+ dataSet.setSliceSpace(3);
+ dataSet.setSelectionShift(5);
 
-        //  create pie data object and set xValues and yValues and set it to the pieChart
-        PieData data = new PieData(labels, dataSet);
-        //   data.setValueFormatter(new DefaultValueFormatter());
-        //   data.setValueFormatter(new PercentFormatter());
+ // adding colors
+ ArrayList<Integer> colors = new ArrayList<Integer>();
 
-        data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        // refresh/update pie chart
-        mChart.invalidate();
-
-        // animate piechart
-        mChart.animateXY(1400, 1400);
+ // Added My Own colors
+ for (int c : MY_COLORS)
+ colors.add(c);
 
 
-        // Legends to show on bottom of the graph
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
+ dataSet.setColors(colors);
+
+ //  create pie data object and set xValues and yValues and set it to the pieChart
+ PieData data = new PieData(labels, dataSet);
+ //   data.setValueFormatter(new DefaultValueFormatter());
+ //   data.setValueFormatter(new PercentFormatter());
+
+ data.setValueFormatter(new MyValueFormatter());
+ data.setValueTextSize(11f);
+ data.setValueTextColor(Color.WHITE);
+
+ mChart.setData(data);
+
+ // undo all highlights
+ mChart.highlightValues(null);
+
+ // refresh/update pie chart
+ mChart.invalidate();
+
+ // animate piechart
+ mChart.animateXY(1400, 1400);
 
 
+ // Legends to show on bottom of the graph
+ Legend l = mChart.getLegend();
+ l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+ l.setXEntrySpace(7);
+ l.setYEntrySpace(5);
 
 
 
 
 
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Unidad de Negocio");
-        labels.add("Solicitudes de Personal");
-        labels.add("Solictudes Cubiertas");
-        labels.add("Solicitudes por Cubrir");
-        labels.add("Dias promedio de los Procesos");
-        labels.add("Procentaje de cubrimiento");
 
 
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 0));
-        entries.add(new BarEntry(8f, 1));
-        entries.add(new BarEntry(6f, 2));
-        entries.add(new BarEntry(12f, 3));
-        entries.add(new BarEntry(18f, 4));
-        entries.add(new BarEntry(9f, 5));
+ ArrayList<String> labels = new ArrayList<String>();
+ labels.add("Unidad de Negocio");
+ labels.add("Solicitudes de Personal");
+ labels.add("Solictudes Cubiertas");
+ labels.add("Solicitudes por Cubrir");
+ labels.add("Dias promedio de los Procesos");
+ labels.add("Procentaje de cubrimiento");
 
-        BarDataSet dataset = new BarDataSet(entries, "Reporte de Solicitudes de Personal");
-        BarChart chart = new BarChart(this.getApplicationContext());
-        setContentView(chart);
 
-        BarData data = new BarData( dataset);
+ ArrayList<BarEntry> entries = new ArrayList<>();
+ entries.add(new BarEntry(4f, 0));
+ entries.add(new BarEntry(8f, 1));
+ entries.add(new BarEntry(6f, 2));
+ entries.add(new BarEntry(12f, 3));
+ entries.add(new BarEntry(18f, 4));
+ entries.add(new BarEntry(9f, 5));
 
-        chart.setData(data);
-        chart.setDescription("Reporte de Solicitudes de Personal");
-*/
-   //    TextView papitas= (TextView) findViewById(R.id.textView);
-     //   papitas.setText(id);
+ BarDataSet dataset = new BarDataSet(entries, "Reporte de Solicitudes de Personal");
+ BarChart chart = new BarChart(this.getApplicationContext());
+ setContentView(chart);
+
+ BarData data = new BarData( dataset);
+
+ chart.setData(data);
+ chart.setDescription("Reporte de Solicitudes de Personal");
+ */
+        //    TextView papitas= (TextView) findViewById(R.id.textView);
+        //   papitas.setText(id);
 
 
     }
@@ -312,29 +374,28 @@ public class Graficas extends AppCompatActivity {
 
 
 
-    /**
-     *      myWebView.setWebViewClient(new WebViewClient());
-     myWebView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
-     myWebView.getSettings().setBuiltInZoomControls(true);
-     myWebView.getSettings().setSupportZoom(true);
-     myWebView.setInitialScale(135);
-     myWebView.loadUrl("http://stggrupobolivar.taleo.net");
-     * myWebView.loadUrl("javascript:window.HTMLOUT.showHTML(http://stggrupobolivar.taleo.net);");
-        myWebView.setWebViewClient(new WebViewClient() {
+/**
+ *      myWebView.setWebViewClient(new WebViewClient());
+ myWebView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
+ myWebView.getSettings().setBuiltInZoomControls(true);
+ myWebView.getSettings().setSupportZoom(true);
+ myWebView.setInitialScale(135);
+ myWebView.loadUrl("http://stggrupobolivar.taleo.net");
+ * myWebView.loadUrl("javascript:window.HTMLOUT.showHTML(http://stggrupobolivar.taleo.net);");
+ myWebView.setWebViewClient(new WebViewClient() {
 
-            public void onPageFinished(WebView view, String url) {
+ public void onPageFinished(WebView view, String url) {
 
-                Log.e("result",view.get);
-            }
-        });
+ Log.e("result",view.get);
+ }
+ });
 
-    }
-    class LoadListener{
-        @JavascriptInterface
+ }
+ class LoadListener{
+@JavascriptInterface
 
-        public void showHTML(String html)
-        {
-            Log.e("result",html);
-        }
-    }**/
-
+public void showHTML(String html)
+{
+Log.e("result",html);
+}
+}**/
