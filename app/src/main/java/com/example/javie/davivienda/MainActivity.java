@@ -203,10 +203,20 @@ public class MainActivity extends AppCompatActivity {
             Log.wtf("texto", "Entro a showHTML");
             Intent intent = new Intent(MainActivity.this, Graficas.class);
             //Log.wtf("texto","html: "+html);
-            Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): "+html.indexOf("<td class=\"PTCHC0"));
-            Log.wtf("texto", "indexOf(TTHC PTLR OOLT): "+html.indexOf("TTHC PTLR OOLT"));
+           // Log.wtf("texto", "indexOf(\"<td class=\\\"PTCHC0\"): "+html.indexOf("<td class=\"PTCHC0"));
+            //Log.wtf("texto", "indexOf(TTHC PTLR OOLT): "+html.indexOf("TTHC PTLR OOLT"));
+            Log.wtf("SENGUNDO", "Segundo indice: "+html.indexOf("<td class=\"PTCHC0", html.indexOf("<td class=\"PTCHC0") + 1));
+            Log.wtf("SENGUNDO", "Final indice: "+html.indexOf("TTHC PTLR OOLT", html.indexOf("TTHC PTLR OOLT") + 1));
+
+
+String tabla2 = html.substring(html.indexOf("<td class=\"PTCHC0", html.indexOf("<td class=\"PTCHC0") + 1), html.indexOf("TTHC PTLR OOLT", html.indexOf("TTHC PTLR OOLT") + 1)) ;
+
+
+
             String substr = html.substring(html.indexOf("<td class=\"PTCHC0"),html.indexOf("TTHC PTLR OOLT"));
             intent.putExtra("HTM",substr);
+            intent.putExtra("TBL",tabla2);
+
 
             startActivity(intent);
             if (dialog.isShowing()) {

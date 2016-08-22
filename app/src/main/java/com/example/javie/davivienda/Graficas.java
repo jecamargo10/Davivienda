@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -454,7 +455,7 @@ private ArrayList<String> cositos;
 
 
 
-        PieDataSet dataSet = new PieDataSet(yVals1,"");
+        PieDataSet dataSet = new PieDataSet(yVals1,"Reporte de solicitudes");
        // dataSet.setValueFormatter(new PercentFormatter());
 
         dataSet.setSliceSpace(3);
@@ -498,8 +499,24 @@ private ArrayList<String> cositos;
         l.setYEntrySpace(5);
 
 
+        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
 
+
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null)
+                    return;
+
+                Toast.makeText(Graficas.this,
+                      e.getData().toString()+ " = " + e.getX() + e.getY() + "%", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
 
     }
