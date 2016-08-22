@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Reporte de Solicitudes de Personal "
         android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textSize="19dp" />
 
 </LinearLayout>

@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                                    //     myWebView.loadUrl("javascript:document.getElementById(\"menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").click();");
 
                                                    myWebView.loadUrl("javascript:document.querySelectorAll('[title=\"Access Oracle Business Intelligence\"]')[0].click();");
+                                                   myWebView.loadUrl("javascript:document.querySelectorAll('[title=\"Acceder a Oracle Business Intelligence\"]')[0].click();");
                                                    //myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1466337356_29pc12-1-ribbonItemLink').click();");
 
 
@@ -256,103 +257,5 @@ String tabla2 = html.substring(html.indexOf("<td class=\"PTCHC0", html.indexOf("
 }
 
 
-/**
- * myWebView.setWebViewClient(new WebViewClient());
- * myWebView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
- * myWebView.getSettings().setBuiltInZoomControls(true);
- * myWebView.getSettings().setSupportZoom(true);
- * myWebView.setInitialScale(135);
- * myWebView.loadUrl("http://stggrupobolivar.taleo.net");
- * myWebView.loadUrl("javascript:window.HTMLOUT.showHTML(http://stggrupobolivar.taleo.net);");
- * myWebView.setWebViewClient(new WebViewClient() {
- * <p>
- * public void onPageFinished(WebView view, String url) {
- * <p>
- * Log.e("result",view.get);
- * }
- * });
- * <p>
- * }
- * class LoadListener{
- *
- * @JavascriptInterface public void showHTML(String html)
- * {
- * Log.e("result",html);
- * }
- * <p>
- * <p>
- * }
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * <p>
- * File data = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator);
- * File logFile = new File(data, "highscore.txt");
- * if (!logFile.exists())
- * {
- * Log.e("result","BUSCO");
- * <p>
- * try
- * {
- * logFile.createNewFile();
- * }
- * catch (IOException e)
- * {
- * // TODO Auto-generated catch block
- * e.printStackTrace();
- * }
- * }
- * try
- * {
- * Log.e("result","Escribo");
- * <p>
- * //BufferedWriter for performance, true to set append to file flag
- * BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
- * Log.e("result","asd");
- * <p>
- * buf.append(html);
- * Log.e("result","xxx");
- * <p>
- * buf.newLine();
- * Log.e("result","zzz");
- * <p>
- * buf.close();
- * Log.e("result","YEAH BITCHES");
- * <p>
- * }
- * catch (IOException e)
- * {
- * Log.e("result",e.getLocalizedMessage());
- * Log.e("result",e.getMessage());
- * <p>
- * <p>
- * // TODO Auto-generated catch block
- * e.printStackTrace();
- * }
- **/
+
 

@@ -53,7 +53,9 @@ public class Graficas extends AppCompatActivity implements AdapterView.OnItemSel
 private  String [] fabulosoArr;
     Spinner     spinnerOsversions;
 private ArrayList<String> cositos;
+    private ArrayList<String> tabliya;
 
+    private String genteActual;
 
 
 
@@ -71,12 +73,18 @@ private ArrayList<String> cositos;
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
-
+String choclito = intent.getStringExtra("TBL");
         String id = "<tr>";
         id += chochorramo;
         id += "\"></td></tr>";
 
+        String tbl2 = "<tr>";
+        tbl2 += choclito;
+        tbl2 += "\"></td></tr>";
+
+
         cositos =new ArrayList<String>();
+        tabliya          =new ArrayList<String>();
 
 
 
@@ -259,6 +267,180 @@ private ArrayList<String> cositos;
         spinnerOsversions.setAdapter(adapter_state);
         spinnerOsversions.setOnItemSelectedListener(this);
 
+
+
+
+
+       //SEGUNDAS GRAFICAS
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+
+            xpp.setInput( new StringReader ( tbl2) );
+            int eventType = xpp.getEventType();
+            String tag="";
+            boolean bonice =false;
+            int posicion = 0;
+            String anadidura= "";
+            boolean contando = false;
+            boolean primeraVez = false;
+            String tagActual = "";
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if(eventType == XmlPullParser.END_TAG)
+                {
+                    //    Log.e("result","End tag "+xpp.getName());
+
+                    if(xpp.getName().equals("tr"))
+                    {
+                        bonice=true;
+
+
+                        //    Log.e("result","End tag "+xpp.getName());
+
+                    }
+
+                }
+
+                else if(eventType == XmlPullParser.START_TAG)
+                {
+                    tagActual =xpp.getName();
+                    //     Log.e("result","START TAG "+xpp.getName());
+                    if(!primeraVez && xpp.getName().equals("td")&& bonice)
+                    {
+
+                        primeraVez = true;
+                    }
+                    else if(xpp.getName().equals("td")&& bonice)
+                    {
+                        //   Log.wtf("HABER",tagActual  );
+
+                        posicion ++;
+
+
+                    }
+
+
+
+
+
+                }
+
+                else if(eventType == XmlPullParser.TEXT) {
+
+
+                    if(!bonice )
+                    {
+
+                        if (!xpp.getText().equals("")) {
+                            if(!xpp.getText().equals(" "))
+                            {
+                                //   Log.e("result","FUERA TR "+xpp.getText());
+
+                            }}
+
+                    }
+                    else
+                    {
+                        //   Log.wtf("TITULO",xpp.getText()  );
+                        //    Log.wtf("POSICION",posicion+""  );
+
+
+                        if(xpp.getText().isEmpty()||xpp.getText().equals("")||xpp.getText().equals(" "))
+                        {
+
+                            //    Log.wtf("ENTROOOOOOOOOOOOo",posicion+""  );
+
+
+                        }
+                        else
+                        {
+
+                            try
+                            {
+
+                                if (posicion==0 & tagActual.equals("td") )
+                                {
+                                    //  Log.wtf("POS0",xpp.getText()  );
+
+                                    //   Log.wtf("TAG0",tagActual  );
+
+                                    String temp = xpp.getText() ;
+                                    if(temp.length()>3) {
+                                        temp +=";";
+                                        anadidura = temp;
+
+                                        //   Log.wtf("POS0", anadidura);
+                                    }
+
+                                }
+
+                                else  if (posicion == 1) {
+                                    //   Log.wtf("POS1",xpp.getText()  );
+                                    //      Log.wtf("TAG1",tagActual  );
+
+
+
+                                    String temp =   xpp.getText().replace(",",".");
+
+                                    if(temp.length()>3) {
+
+                                        anadidura = anadidura + (temp + ";");
+
+                                        //   Log.wtf("POS1", anadidura);
+
+                                        //    double numero = Double.parseDouble(temp);
+                                        //  yVals1.add(new PieEntry((int) numero, 0));
+                                    }
+                                }
+                                else if (posicion == 2)
+                                {
+                                    //      Log.wtf("POS2",xpp.getText()  );
+                                    //     Log.wtf("TAG2",tagActual  );
+
+                                    posicion = -1 ;
+                                    String temp =   xpp.getText().replace(",",".");
+                                    anadidura += temp;
+                                    //    Log.wtf("ARR",anadidura  );
+                                    tabliya.add(anadidura);
+                                    anadidura = "";
+
+                                    //    double numero=   Double.parseDouble(temp);
+                                    //  yVals1.add(new PieEntry((int) numero, 1));
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Log.wtf("texto", "Error de parsing" + e.getMessage());
+                                e.printStackTrace();
+                            }
+                            //   AÑADIR NUMEROS
+
+                        }
+
+                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
+
+                    }
+                }
+                eventType = xpp.next();
+            }
+
+        }
+        catch (Exception e)
+        {
+            Log.e("result",e.getMessage());
+
+        }
+
+        Log.wtf("ARREGLO2", "HIPER" + tabliya.size());
+
+
+
+
+
+
+
 /**
         PieDataSet dataSet = new PieDataSet(yVals1, "");
         dataSet.setSliceSpace(3);
@@ -413,8 +595,9 @@ private ArrayList<String> cositos;
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
         spinnerOsversions.setSelection(position);
-        String selState = (String) spinnerOsversions.getSelectedItem();
+        final String selState = (String) spinnerOsversions.getSelectedItem();
         Log.e("result",selState);
+        genteActual=selState;
 
 
 
@@ -431,8 +614,14 @@ private ArrayList<String> cositos;
                 double asd1 = Double.parseDouble(coso[1]);
                 double asd2 = Double.parseDouble(coso[2]);
 
-                yVals1.add(new PieEntry((int) asd1, 0));
-                yVals1.add(new PieEntry((int) asd2, 1));
+                if(asd1 != 0) {
+                    yVals1.add(new PieEntry((int) asd1, labels.get(0)));
+                }
+
+                if (asd2 != 0) {
+                    yVals1.add(new PieEntry((int) asd2, labels.get(1)));
+
+                }
                 break;
             }
 
@@ -455,7 +644,7 @@ private ArrayList<String> cositos;
 
 
 
-        PieDataSet dataSet = new PieDataSet(yVals1,"Reporte de solicitudes");
+        PieDataSet dataSet = new PieDataSet(yVals1,"");
        // dataSet.setValueFormatter(new PercentFormatter());
 
         dataSet.setSliceSpace(3);
@@ -479,6 +668,7 @@ private ArrayList<String> cositos;
         data.setValueFormatter(new MyValueFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
+
 
         mChart.setData(data);
 
@@ -509,7 +699,7 @@ private ArrayList<String> cositos;
                     return;
 
                 Toast.makeText(Graficas.this,
-                      e.getData().toString()+ " = " + e.getX() + e.getY() + "%", Toast.LENGTH_SHORT).show();
+                        selState +"%", Toast.LENGTH_SHORT).show();
             }
 
             @Override
