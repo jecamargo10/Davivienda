@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                                                    //myWebView.loadUrl("javascript:document.getElementById('menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1466337356_29pc12-1-ribbonItemLink').click();");
 
 
+
                                                    // myWebView.loadUrl("$(\"#menuTemplate-menuForm-globalHeader-pageRibbonSubView-j_id_jsp_1407348119_29pc12-1-ribbonItemLink\").trigger(\"onclick\");");
 
                                                    //myWebView.loadUrl("$(\"#menuTemplate-menuForm-gotoSubView-quickAccessBlock\").trigger(\"onclick\");");
@@ -212,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
 
-            finish();
 
         }
 
