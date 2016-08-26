@@ -26,6 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DrillDown"></activity>
+
         <activity android:name=".Graficas"></activity>
         <activity
             android:name=".LoginActivity"

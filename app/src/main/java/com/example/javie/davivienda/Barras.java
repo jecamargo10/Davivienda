@@ -1,26 +1,17 @@
 package com.example.javie.davivienda;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -29,7 +20,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
@@ -40,15 +30,11 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class Graficas extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnChartGestureListener {
+public class Barras extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnChartGestureListener {
 
     public static  final int[] MY_COLORS = {
             Color.rgb(84,124,101), Color.rgb(64,64,64), Color.rgb(153,19,0),
@@ -749,10 +735,10 @@ String choclito = intent.getStringExtra("TBL");
                 if (e == null)
                     return;
 
-                Toast.makeText(Graficas.this,
+                Toast.makeText(Barras.this,
                         selState +"%", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        Graficas.this);
+                        Barras.this);
 
                 alertDialogBuilder.setTitle("Informacion de Cantidatos");
 
@@ -783,7 +769,7 @@ String retorno = "";
 
 
                                 }
-                                Intent intent = new Intent(Graficas.this, DrillDown.class);
+                                Intent intent = new Intent(Barras.this, DrillDown.class);
 
 
                                 intent.putExtra("TBL",retorno);
