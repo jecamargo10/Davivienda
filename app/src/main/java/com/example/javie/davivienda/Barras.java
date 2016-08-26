@@ -14,17 +14,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -34,7 +43,7 @@ import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class Barras extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnChartGestureListener {
+public class Barras extends AppCompatActivity  {
 
     public static  final int[] MY_COLORS = {
             Color.rgb(84,124,101), Color.rgb(64,64,64), Color.rgb(153,19,0),
@@ -42,7 +51,6 @@ public class Barras extends AppCompatActivity implements AdapterView.OnItemSelec
     };
 
 private  String [] fabulosoArr;
-    Spinner     spinnerOsversions;
 private ArrayList<String> cositos;
     private ArrayList<String> tabliya;
 
@@ -53,18 +61,14 @@ private ArrayList<String> cositos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.otro);
+        setContentView(R.layout.barras);
 
 
-
-
-
-
-        Log.e("result","GRAFICO");
+        Log.e("result", "GRAFICO");
 
         Intent intent = getIntent();
         String chochorramo = intent.getStringExtra("HTM");
-String choclito = intent.getStringExtra("TBL");
+        String choclito = intent.getStringExtra("TBL");
         String id = "<tr>";
         id += chochorramo;
         id += "\"></td></tr>";
@@ -74,10 +78,8 @@ String choclito = intent.getStringExtra("TBL");
         tbl2 += "\"></td></tr>";
 
 
-        cositos =new ArrayList<String>();
-        tabliya          =new ArrayList<String>();
-
-
+        cositos = new ArrayList<String>();
+        tabliya = new ArrayList<String>();
 
 
         try {
@@ -85,297 +87,90 @@ String choclito = intent.getStringExtra("TBL");
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
 
-            xpp.setInput( new StringReader ( id) );
+            xpp.setInput(new StringReader(id));
             int eventType = xpp.getEventType();
-            String tag="";
-            boolean bonice =false;
+            String tag = "";
+            boolean bonice = false;
             int posicion = 0;
-            String anadidura= "";
+            String anadidura = "";
             boolean contando = false;
             boolean primeraVez = false;
             String tagActual = "";
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if(eventType == XmlPullParser.END_TAG)
-                {
-                //    Log.e("result","End tag "+xpp.getName());
-
-                    if(xpp.getName().equals("tr"))
-                    {
-                        bonice=true;
-
-
-                        //    Log.e("result","End tag "+xpp.getName());
-
-                    }
-
-                }
-
-                else if(eventType == XmlPullParser.START_TAG)
-                {
-                    tagActual =xpp.getName();
-               //     Log.e("result","START TAG "+xpp.getName());
-                    if(!primeraVez && xpp.getName().equals("td")&& bonice)
-                    {
-
-                        primeraVez = true;
-                    }
-                    else if(xpp.getName().equals("td")&& bonice)
-                    {
-                     //   Log.wtf("HABER",tagActual  );
-
-                        posicion ++;
-
-
-                    }
-
-
-
-
-
-                }
-
-                else if(eventType == XmlPullParser.TEXT) {
-
-
-                    if(!bonice )
-                    {
-
-                        if (!xpp.getText().equals("")) {
-                            if(!xpp.getText().equals(" "))
-                            {
-                             //   Log.e("result","FUERA TR "+xpp.getText());
-
-                            }}
-
-                    }
-                    else
-                    {
-                  //   Log.wtf("TITULO",xpp.getText()  );
-                    //    Log.wtf("POSICION",posicion+""  );
-
-
-                        if(xpp.getText().isEmpty()||xpp.getText().equals("")||xpp.getText().equals(" "))
-                        {
-
-                        //    Log.wtf("ENTROOOOOOOOOOOOo",posicion+""  );
-
-
-                        }
-                        else
-                        {
-
-                            try
-                            {
-
-                                if (posicion==0 & tagActual.equals("td") )
-                                {
-                                  //  Log.wtf("POS0",xpp.getText()  );
-
-                                 //   Log.wtf("TAG0",tagActual  );
-
-                                    String temp = xpp.getText() ;
-                                    if(temp.length()>3) {
-                                        temp +=";";
-                                        anadidura = temp;
-
-                                     //   Log.wtf("POS0", anadidura);
-                                    }
-
-                                }
-
-                                else  if (posicion == 1) {
-                                 //   Log.wtf("POS1",xpp.getText()  );
-                              //      Log.wtf("TAG1",tagActual  );
-
-
-
-                                    String temp =   xpp.getText().replace(",",".");
-
-                                    if(temp.length()>3) {
-
-                                        anadidura = anadidura + (temp + ";");
-
-                                     //   Log.wtf("POS1", anadidura);
-
-                                    //    double numero = Double.parseDouble(temp);
-                                      //  yVals1.add(new PieEntry((int) numero, 0));
-                                    }
-                                }
-                                else if (posicion == 2)
-                                {
-                              //      Log.wtf("POS2",xpp.getText()  );
-                               //     Log.wtf("TAG2",tagActual  );
-
-                                    posicion = -1 ;
-                                    String temp =   xpp.getText().replace(",",".");
-                                    anadidura += temp;
-                                //    Log.wtf("ARR",anadidura  );
-                                    cositos.add(anadidura);
-                                    anadidura = "";
-
-                                //    double numero=   Double.parseDouble(temp);
-                                  //  yVals1.add(new PieEntry((int) numero, 1));
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Log.wtf("texto", "Error de parsing" + e.getMessage());
-                                e.printStackTrace();
-                            }
-                            //   AÑADIR NUMEROS
-
-                        }
-
-                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
-
-                    }
-                }
-                eventType = xpp.next();
-            }
-
-        }
-        catch (Exception e)
-        {
-            Log.e("result",e.getMessage());
-
-        }
-
-        Log.wtf("ARREGLO", "Fabuloso" + cositos.size());
-        fabulosoArr= new String[cositos.size()] ;
-    for(int j = 0; j < cositos.size(); j++)
-        {
-            String coso = cositos.get(j);
-            fabulosoArr[j]=coso.split(";")[0];
-
-
-        }
-             spinnerOsversions = (Spinner) findViewById(R.id.spinner);
-
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,  android.R.layout.simple_spinner_item, fabulosoArr);
-        adapter_state
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerOsversions.setAdapter(adapter_state);
-        spinnerOsversions.setOnItemSelectedListener(this);
-
-
-
-
-
-       //SEGUNDAS GRAFICAS
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-
-            xpp.setInput( new StringReader ( tbl2) );
-            int eventType = xpp.getEventType();
-            String tag="";
-            boolean bonice =false;
-            int posicion = 0;
-            String anadidura= "";
-            boolean contando = false;
-            boolean primeraVez = false;
-            String tagActual = "";
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if(eventType == XmlPullParser.END_TAG)
-                {
+                if (eventType == XmlPullParser.END_TAG) {
                     //    Log.e("result","End tag "+xpp.getName());
 
-                    if(xpp.getName().equals("tr"))
-                    {
-                        bonice=true;
+                    if (xpp.getName().equals("tr")) {
+                        bonice = true;
 
 
                         //    Log.e("result","End tag "+xpp.getName());
 
                     }
 
-                }
-
-                else if(eventType == XmlPullParser.START_TAG)
-                {
-                    tagActual =xpp.getName();
+                } else if (eventType == XmlPullParser.START_TAG) {
+                    tagActual = xpp.getName();
                     //     Log.e("result","START TAG "+xpp.getName());
-                    if(!primeraVez && xpp.getName().equals("td")&& bonice)
-                    {
+                    if (!primeraVez && xpp.getName().equals("td") && bonice) {
 
                         primeraVez = true;
-                    }
-                    else if(xpp.getName().equals("td")&& bonice)
-                    {
+                    } else if (xpp.getName().equals("td") && bonice) {
                         //   Log.wtf("HABER",tagActual  );
 
-                        posicion ++;
+                        posicion++;
 
 
                     }
 
 
+                } else if (eventType == XmlPullParser.TEXT) {
 
 
-
-                }
-
-                else if(eventType == XmlPullParser.TEXT) {
-
-
-                    if(!bonice )
-                    {
+                    if (!bonice) {
 
                         if (!xpp.getText().equals("")) {
-                            if(!xpp.getText().equals(" "))
-                            {
+                            if (!xpp.getText().equals(" ")) {
                                 //   Log.e("result","FUERA TR "+xpp.getText());
 
-                            }}
+                            }
+                        }
 
-                    }
-                    else
-                    {
+                    } else {
                         //   Log.wtf("TITULO",xpp.getText()  );
                         //    Log.wtf("POSICION",posicion+""  );
 
 
-                        if(xpp.getText().isEmpty()||xpp.getText().equals("")||xpp.getText().equals(" "))
-                        {
+                        if (xpp.getText().isEmpty() || xpp.getText().equals("") || xpp.getText().equals(" ")) {
 
                             //    Log.wtf("ENTROOOOOOOOOOOOo",posicion+""  );
 
 
-                        }
-                        else
-                        {
+                        } else {
 
-                            try
-                            {
+                            try {
 
-                                if (posicion==0 & tagActual.equals("td") )
-                                {
+                                if (posicion == 0 & tagActual.equals("td")) {
                                     //  Log.wtf("POS0",xpp.getText()  );
 
                                     //   Log.wtf("TAG0",tagActual  );
 
-                                    String temp = xpp.getText() ;
-                                    if(temp.length()>3) {
-                                        temp +=";";
+                                    String temp = xpp.getText();
+                                    if (temp.length() > 3) {
+                                        temp += ";";
                                         anadidura = temp;
 
                                         //   Log.wtf("POS0", anadidura);
                                     }
 
-                                }
-
-                                else  if (posicion == 1) {
+                                } else if (posicion == 1) {
                                     //   Log.wtf("POS1",xpp.getText()  );
                                     //      Log.wtf("TAG1",tagActual  );
 
 
+                                    String temp = xpp.getText().replace(",", ".");
 
-                                    String temp =   xpp.getText().replace(",",".");
-
-                                    if(isNumeric(temp)) {
+                                    if (temp.length() > 3) {
 
                                         anadidura = anadidura + (temp + ";");
 
@@ -384,25 +179,21 @@ String choclito = intent.getStringExtra("TBL");
                                         //    double numero = Double.parseDouble(temp);
                                         //  yVals1.add(new PieEntry((int) numero, 0));
                                     }
-                                }
-                                else if (posicion == 2)
-                                {
+                                } else if (posicion == 2) {
                                     //      Log.wtf("POS2",xpp.getText()  );
                                     //     Log.wtf("TAG2",tagActual  );
 
-                                    posicion = -1 ;
-                                    String temp =   xpp.getText().replace(",",".");
+                                    posicion = -1;
+                                    String temp = xpp.getText().replace(",", ".");
                                     anadidura += temp;
                                     //    Log.wtf("ARR",anadidura  );
-                                    tabliya.add(anadidura);
+                                    cositos.add(anadidura);
                                     anadidura = "";
 
                                     //    double numero=   Double.parseDouble(temp);
                                     //  yVals1.add(new PieEntry((int) numero, 1));
                                 }
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 Log.wtf("texto", "Error de parsing" + e.getMessage());
                                 e.printStackTrace();
                             }
@@ -417,200 +208,229 @@ String choclito = intent.getStringExtra("TBL");
                 eventType = xpp.next();
             }
 
+        } catch (Exception e) {
+            Log.e("result", e.getMessage());
+
         }
-        catch (Exception e)
-        {
-            Log.e("result",e.getMessage());
+
+        Log.wtf("ARREGLO", "Fabuloso" + cositos.size());
+        fabulosoArr = new String[cositos.size()];
+        for (int j = 0; j < cositos.size(); j++) {
+            String coso = cositos.get(j);
+            fabulosoArr[j] = coso.split(";")[0];
+
+
+        }
+
+
+        //SEGUNDAS GRAFICAS
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+
+            xpp.setInput(new StringReader(tbl2));
+            int eventType = xpp.getEventType();
+            String tag = "";
+            boolean bonice = false;
+            int posicion = 0;
+            String anadidura = "";
+            boolean contando = false;
+            boolean primeraVez = false;
+            String tagActual = "";
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.END_TAG) {
+                    //    Log.e("result","End tag "+xpp.getName());
+
+                    if (xpp.getName().equals("tr")) {
+                        bonice = true;
+
+
+                        //    Log.e("result","End tag "+xpp.getName());
+
+                    }
+
+                } else if (eventType == XmlPullParser.START_TAG) {
+                    tagActual = xpp.getName();
+                    //     Log.e("result","START TAG "+xpp.getName());
+                    if (!primeraVez && xpp.getName().equals("td") && bonice) {
+
+                        primeraVez = true;
+                    } else if (xpp.getName().equals("td") && bonice) {
+                        //   Log.wtf("HABER",tagActual  );
+
+                        posicion++;
+
+
+                    }
+
+
+                } else if (eventType == XmlPullParser.TEXT) {
+
+
+                    if (!bonice) {
+
+                        if (!xpp.getText().equals("")) {
+                            if (!xpp.getText().equals(" ")) {
+                                //   Log.e("result","FUERA TR "+xpp.getText());
+
+                            }
+                        }
+
+                    } else {
+                        //   Log.wtf("TITULO",xpp.getText()  );
+                        //    Log.wtf("POSICION",posicion+""  );
+
+
+                        if (xpp.getText().isEmpty() || xpp.getText().equals("") || xpp.getText().equals(" ")) {
+
+                            //    Log.wtf("ENTROOOOOOOOOOOOo",posicion+""  );
+
+
+                        } else {
+
+                            try {
+
+                                if (posicion == 0 & tagActual.equals("td")) {
+                                    //  Log.wtf("POS0",xpp.getText()  );
+
+                                    //   Log.wtf("TAG0",tagActual  );
+
+                                    String temp = xpp.getText();
+                                    if (temp.length() > 3) {
+                                        temp += ";";
+                                        anadidura = temp;
+
+                                        //   Log.wtf("POS0", anadidura);
+                                    }
+
+                                } else if (posicion == 1) {
+                                    //   Log.wtf("POS1",xpp.getText()  );
+                                    //      Log.wtf("TAG1",tagActual  );
+
+
+                                    String temp = xpp.getText().replace(",", ".");
+
+                                    if (isNumeric(temp)) {
+
+                                        anadidura = anadidura + (temp + ";");
+
+                                        //   Log.wtf("POS1", anadidura);
+
+                                        //    double numero = Double.parseDouble(temp);
+                                        //  yVals1.add(new PieEntry((int) numero, 0));
+                                    }
+                                } else if (posicion == 2) {
+                                    //      Log.wtf("POS2",xpp.getText()  );
+                                    //     Log.wtf("TAG2",tagActual  );
+
+                                    posicion = -1;
+                                    String temp = xpp.getText().replace(",", ".");
+                                    anadidura += temp;
+                                    //    Log.wtf("ARR",anadidura  );
+                                    tabliya.add(anadidura);
+                                    anadidura = "";
+
+                                    //    double numero=   Double.parseDouble(temp);
+                                    //  yVals1.add(new PieEntry((int) numero, 1));
+                                }
+                            } catch (Exception e) {
+                                Log.wtf("texto", "Error de parsing" + e.getMessage());
+                                e.printStackTrace();
+                            }
+                            //   AÑADIR NUMEROS
+
+                        }
+
+                        // entries.add(new BarEntry(Float.parseFloat(xpp.getText()), entries.size()));
+
+                    }
+                }
+                eventType = xpp.next();
+            }
+
+        } catch (Exception e) {
+            Log.e("result", e.getMessage());
 
         }
 
         Log.wtf("ARREGLO2", "HIPER" + tabliya.size());
 
 
+        BarChart  barChart = (BarChart ) findViewById(R.id.chart1);
+        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
 
 
+        for (int j = 0; j < cositos.size(); j++) {
+
+            String[] coso = cositos.get(j).split(";");
+            double asd1 = Double.parseDouble(coso[1]);
+            double asd2 = Double.parseDouble(coso[2]);
+            if (asd1 < 1) {
+                asd1 = 1 + (double) (Math.random() * (((asd1-1) -1) + 1));
+            }
+
+            double porcentaje = (asd1 * 100) / asd2;
 
 
+            entries.add(new BarEntry( j, (float) porcentaje));
+        }
 
-/**
-        PieDataSet dataSet = new PieDataSet(yVals1, "");
-        dataSet.setSliceSpace(3);
-        dataSet.setSelectionShift(5);
-
-        // adding colors
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        // Added My Own colors
-        for (int c : MY_COLORS)
-            colors.add(c);
+        ArrayList<String> colors = new ArrayList<String>();
+                BarDataSet dataset = new BarDataSet(entries, "JESUS");
+        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
 
-        dataSet.setColors(colors);
+        BarData data = new BarData(dataset);
+        data.setDrawValues(true);
+        data.setBarWidth(0.9f);
 
-        //  create pie data object and set xValues and yValues and set it to the pieChart
-        PieData data = new PieData( dataSet);
-        //   data.setValueFormatter(new DefaultValueFormatter());
-        //   data.setValueFormatter(new PercentFormatter());
+        barChart.setData(data);
 
-        data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        // refresh/update pie chart
-        mChart.invalidate();
-
-        // animate piechart
-        mChart.animateXY(1400, 1400);
+        barChart.setVisibleXRangeMaximum(10f);
 
 
-        // Legends to show on bottom of the graph
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
+        //      barChart.setFitBars(true);
+        final String[] quarters = new String[cositos.size()] ;
 
 
+        for (int j = 0; j < cositos.size(); j++) {
+
+            String[] coso = cositos.get(j).split(";");
+            quarters[j]=coso[0];
+
+        }
 
 
+        AxisValueFormatter formatter = new AxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return quarters[(int) value];
+            }
+
+            // we don't draw numbers, so no decimal digits needed
+            @Override
+            public int getDecimalDigits() {  return 0; }
+        };
 
 
- ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-
- for (int i = 0; i < yValues.length; i++)
- yVals1.add(new Entry(yValues[i], i));
-
-
-
-
- // create pieDataSet
- PieDataSet dataSet = new PieDataSet(yVals1, "");
- dataSet.setSliceSpace(3);
- dataSet.setSelectionShift(5);
-
- // adding colors
- ArrayList<Integer> colors = new ArrayList<Integer>();
-
- // Added My Own colors
- for (int c : MY_COLORS)
- colors.add(c);
-
-
- dataSet.setColors(colors);
-
- //  create pie data object and set xValues and yValues and set it to the pieChart
- PieData data = new PieData(labels, dataSet);
- //   data.setValueFormatter(new DefaultValueFormatter());
- //   data.setValueFormatter(new PercentFormatter());
-
- data.setValueFormatter(new MyValueFormatter());
- data.setValueTextSize(11f);
- data.setValueTextColor(Color.WHITE);
-
- mChart.setData(data);
-
- // undo all highlights
- mChart.highlightValues(null);
-
- // refresh/update pie chart
- mChart.invalidate();
-
- // animate piechart
- mChart.animateXY(1400, 1400);
-
-
- // Legends to show on bottom of the graph
- Legend l = mChart.getLegend();
- l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
- l.setXEntrySpace(7);
- l.setYEntrySpace(5);
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+        xAxis.setValueFormatter(formatter);
 
 
 
 
 
 
-
- ArrayList<String> labels = new ArrayList<String>();
- labels.add("Unidad de Negocio");
- labels.add("Solicitudes de Personal");
- labels.add("Solictudes Cubiertas");
- labels.add("Solicitudes por Cubrir");
- labels.add("Dias promedio de los Procesos");
- labels.add("Procentaje de cubrimiento");
-
-
- ArrayList<BarEntry> entries = new ArrayList<>();
- entries.add(new BarEntry(4f, 0));
- entries.add(new BarEntry(8f, 1));
- entries.add(new BarEntry(6f, 2));
- entries.add(new BarEntry(12f, 3));
- entries.add(new BarEntry(18f, 4));
- entries.add(new BarEntry(9f, 5));
-
- BarDataSet dataset = new BarDataSet(entries, "Reporte de Solicitudes de Personal");
- BarChart chart = new BarChart(this.getApplicationContext());
- setContentView(chart);
-
- BarData data = new BarData( dataset);
-
- chart.setData(data);
- chart.setDescription("Reporte de Solicitudes de Personal");
- */
-        //    TextView papitas= (TextView) findViewById(R.id.textView);
-        //   papitas.setText(id);
 
 
     }
 
-    @Override
-    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-    }
-
-    @Override
-    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-    }
-
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me)
-    {
 
 
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me)
-    {
-
-
-
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-    }
-
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-    }
 
     public class MyValueFormatter implements ValueFormatter {
 
@@ -628,186 +448,6 @@ String choclito = intent.getStringExtra("TBL");
     }
 
 
-    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                               long id) {
-        spinnerOsversions.setSelection(position);
-        final String selState = (String) spinnerOsversions.getSelectedItem();
-        Log.e("result",selState);
-        genteActual=selState;
-
-
-
-        ArrayList<PieEntry> yVals1 = new ArrayList<PieEntry>();
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Solicitudes cubiertas");
-        labels.add("Solicitudes por cubrir");
-        for(int j = 0; j < cositos.size(); j++)
-        {
-
-            String [] coso = cositos.get(j).split(";");
-
-            if(coso[0].equals(selState)) {
-                double asd1 = Double.parseDouble(coso[1]);
-                double asd2 = Double.parseDouble(coso[2]);
-
-                if(asd1 != 0) {
-                    yVals1.add(new PieEntry((int) asd1, labels.get(0)));
-                }
-
-                if (asd2 != 0) {
-                    yVals1.add(new PieEntry((int) asd2, labels.get(1)));
-
-                }
-                break;
-            }
-
-
-
-
-
-        }
-
-
-        PieChart  mChart = (PieChart) findViewById(R.id.chart1);
-
-        //   mChart.setUsePercentValues(true);
-        mChart.setDescription("");
-
-        mChart.setRotationEnabled(true);
-
-
-
-
-
-
-        PieDataSet dataSet = new PieDataSet(yVals1,"");
-       // dataSet.setValueFormatter(new PercentFormatter());
-
-        dataSet.setSliceSpace(3);
-        dataSet.setSelectionShift(5);
-
-        // adding colors
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        // Added My Own colors
-        for (int c : MY_COLORS)
-            colors.add(c);
-
-
-        dataSet.setColors(colors);
-
-        //  create pie data object and set xValues and yValues and set it to the pieChart
-        PieData data = new PieData( dataSet);
-        //   data.setValueFormatter(new DefaultValueFormatter());
-        //   data.setValueFormatter(new PercentFormatter());
-
-        data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-
-        mChart.setOnChartGestureListener(this);
-
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        // refresh/update pie chart
-        mChart.invalidate();
-
-        // animate piechart
-        mChart.animateXY(1400, 1400);
-
-
-        // Legends to show on bottom of the graph
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
-
-
-        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-
-
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                if (e == null)
-                    return;
-
-                Toast.makeText(Barras.this,
-                        selState +"%", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        Barras.this);
-
-                alertDialogBuilder.setTitle("Informacion de Cantidatos");
-
-                // set dialog message
-                alertDialogBuilder
-                        .setMessage("Acceder")
-                        .setCancelable(false)
-                .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }})
-                        .setPositiveButton("SI",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                // if this button is clicked, clos
-String retorno = "";
-                                for(int j = 0; j < tabliya.size(); j++)
-                                {
-                                    String coso = tabliya.get(j);
-                                    Log.e("JODA",coso);
-
-                                    String nombre =coso.split(";")[0];
-                                    if (nombre.equals(selState))
-                                    {
-                                        Log.e("ENVIO",coso);
-
-                                        retorno = coso;
-                                    }
-
-
-                                }
-                                Intent intent = new Intent(Barras.this, DrillDown.class);
-
-
-                                intent.putExtra("TBL",retorno);
-
-
-                                startActivity(intent);
-
-                                // current activity
-                            }
-                        })
-                      ;
-
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-
-                // show it
-                alertDialog.show();
-
-            }
-
-
-
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
     public static boolean isNumeric(String str)
     {
         try
@@ -824,31 +464,3 @@ String retorno = "";
 
 }
 
-
-
-
-/**
- *      myWebView.setWebViewClient(new WebViewClient());
- myWebView.addJavascriptInterface(new LoadListener(), "HTMLOUT");
- myWebView.getSettings().setBuiltInZoomControls(true);
- myWebView.getSettings().setSupportZoom(true);
- myWebView.setInitialScale(135);
- myWebView.loadUrl("http://stggrupobolivar.taleo.net");
- * myWebView.loadUrl("javascript:window.HTMLOUT.showHTML(http://stggrupobolivar.taleo.net);");
- myWebView.setWebViewClient(new WebViewClient() {
-
- public void onPageFinished(WebView view, String url) {
-
- Log.e("result",view.get);
- }
- });
-
- }
- class LoadListener{
-@JavascriptInterface
-
-public void showHTML(String html)
-{
-Log.e("result",html);
-}
-}**/

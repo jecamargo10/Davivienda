@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DrillDown"></activity>
+        <activity android:name=".Barras"></activity>
 
         <activity android:name=".Graficas"></activity>
         <activity
